@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reading Data from XML Files</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="main.css" />
+</head>
+<body>
+    <header>
+        <h1>Reading Data from XML Files</h1>
+    </header>
+    <main>
+        <ul id="user"></ul>
+        <ul id="pwd"></ul>
+        <pre id="output"></pre>
+    </main>   
+    <script>
+        document.addEventListener('DOMContentLoaded', ()=>{
+            let url = "logs.xml";
+            fetch(url)
+            .then(response=>response.text())
+            .then(data=>{
+                let parser = new DOMParser();
+                let xml = parser.parseFromString(data, "application/xml");
+                document.getElementById('output').textContent = data;
+                console.log(xml);
+                builduserList(xml);
+                buildpassList(xml);
+            });
+        })
+        
+        function builduserList(x){
+            let list = document.getElementById('user');
+            let user = x.getElementsByTagName('name');
+            for(let i=0; i<user.length; i++){
+                let li = document.createElement('li');
+                let name = user[i].firstChild.nodeValue;
+                li.textContent = name;
+                list.appendChild(li);
+            }
+        }
+        
+        function buildpassList(x){
+            let list = document.getElementById('pwd');
+            let pwd = x.getElementsByTagName('pass');
+            for(let i=0; i<pwd.length; i++){
+                let li = document.createElement('li');
+                let pass = pwd[i].firstChild.nodeValue;
+                let person = pwd[i].getAttribute('owner');
+                li.textContent = pass;
+                list.appendChild(li);
+            }
+        }
+    </script>
+</body>
+</html>
